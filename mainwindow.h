@@ -38,6 +38,7 @@ public:
     QStringList queryCodeTag(QString code_no);
    // void add(QString code,QString tag);
     QStringList title_code;
+    QStringList date;
     QStringList tag_list;
     QStringList ui_tag_list;
     QStringList code_no;

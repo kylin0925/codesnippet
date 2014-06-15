@@ -7,7 +7,7 @@
 #include <QCryptographicHash>
 #include <QByteArray>
 #include <QListWidgetItem>
-
+#include <QStandardItemModel>
 //database
 // code_num,title,code,date
 // no,tag,code_num
@@ -232,7 +232,7 @@ void datahelper::loaddata(QString tag)
 }
 void datahelper::loaddata()
 {
-    QString sql = "select code_no,title from codetbl";
+    QString sql = "select code_no,title,date from codetbl";
 
     QSqlQuery query;
     total_code = 0;
@@ -243,10 +243,11 @@ void datahelper::loaddata()
     ui_tag_list.clear();
     query.exec(sql);
     while(query.next()){
-        this->title_code.append(query.value(1).toString());
         this->code_no.append(query.value(0).toString());
+        this->title_code.append(query.value(1).toString());
+        this->date.append(query.value(2).toString());
 
-        qDebug()<<query.value(0).toString()<<query.value(1).toString();
+        qDebug()<<query.value(0).toString()<<query.value(1).toString()<<query.value(2).toString();
         total_code++;
     }
 
@@ -292,7 +293,7 @@ void datahelper::loaddata()
 //
 void MainWindow::clear_ui()
 {
-    ui->lstTitle->clear();
+    //ui->lstTitle->clear(); //xxxx
     ui->lstTag->clear();
     ui->lstCodeTag->clear();
 }
@@ -301,7 +302,7 @@ void MainWindow::update_ui()
     clear_ui();
     db->checkdb();
     db->loaddata();
-    ui->lstTitle->addItems(db->title_code);
+    //ui->lstTitle->addItems(db->title_code); // xxxxx
     ui->lstTag->addItems(db->ui_tag_list);
 }
 
@@ -322,7 +323,7 @@ MainWindow::MainWindow(QWidget *parent) :
     db = new datahelper();
    /* db->checkdb();
     db->loaddata();
-    ui->lstTitle->addItems(db->title_code);
+    ui->lstTitle->addItems(db->title_code); //xxxxx
     ui->lstTag->addItems(db->tag_list);*/
     update_ui();
 
@@ -331,6 +332,21 @@ MainWindow::MainWindow(QWidget *parent) :
 //    l.append(70);
 //    l.append(200);
 //    ui->splitterMain->setSizes(l);
+
+    QStandardItemModel *model = new QStandardItemModel;
+    QStringList lab;
+    lab << "Title"<<"Date";
+    model->setHorizontalHeaderLabels(lab);
+
+
+    for(int i = 0;i<db->title_code.size();i++){
+        QList<QStandardItem *> rowItems1;
+        rowItems1<<new QStandardItem(db->title_code[i]);
+        rowItems1<<new QStandardItem(db->date[i]);
+        model->appendRow(rowItems1);
+
+    }
+    ui->lstTitle->setModel(model);
 }
 
 MainWindow::~MainWindow()
@@ -355,7 +371,7 @@ void MainWindow::on_lstTitle_itemClicked(QListWidgetItem *item)
 {
     QString code;
     int row = ui->lstTitle->currentIndex().row();
-
+    qDebug()<<row;
     //qDebug()<<db->code_no[row];
 
     code = db->queryCode(db->code_no[row]);
@@ -390,7 +406,7 @@ void MainWindow::on_btnAdd_clicked()
         QMessageBox::warning(this,"test","input code");
     else
     {
-        ui->lstTitle->addItem(ui->edtTitle->text());
+        //ui->lstTitle->addItem(ui->edtTitle->text()); /xxxx
         if(ui->edtTag->text() != "")
             ui->lstTag->addItem(ui->edtTag->text());
 
@@ -514,7 +530,38 @@ void MainWindow::on_lstTag_clicked(const QModelIndex &index)
     else
     {
         db->loaddata(tag);
-        ui->lstTitle->clear();
-        ui->lstTitle->addItems(db->title_code);
+        //ui->lstTitle->clear(); //xxx
+        //ui->lstTitle->addItems(db->title_code); /xxx
     }
+}
+
+void MainWindow::on_lstTitle_clicked(const QModelIndex &index)
+{
+    int row = ui->lstTitle->currentIndex().row();
+   // qDebug()<<row;
+    qDebug()<<index.row();
+    QStandardItemModel *model = (QStandardItemModel *)ui->lstTitle->model();
+    qDebug()<<model->item(0)->text();
+
+    QString code;
+
+    //qDebug()<<db->code_no[row];
+
+    code = db->queryCode(db->code_no[row]);
+
+    QStringList taglst =db->queryCodeTag(db->code_no[row]);
+    ui->lstCodeTag->clear();
+    ui->lstCodeTag->addItems(taglst);
+//show
+    ui->edtTitle->setText(model->item(row)->text());
+    ui->txtCode->setPlainText(code);
+// change ui
+    ui->edtTitle->setEnabled(true);
+    ui->txtCode->setEnabled(true);
+    ui->edtTag->setEnabled(true);
+
+    ui->btnAdd->setEnabled(false);
+    ui->btnModify->setEnabled(true);
+    ui->btnCancel->setEnabled(true);
+    ui->btnDel->setEnabled(true);
 }
