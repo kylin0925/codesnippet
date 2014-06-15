@@ -50,9 +50,7 @@
          <item>
           <widget class="QLabel" name="label_2">
            <property name="styleSheet">
-            <string notr="true">border: 3px solid gray;
-border-radius:40px;
-background-color: rgb(191, 191, 191);</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>Title List</string>
@@ -60,7 +58,7 @@ background-color: rgb(191, 191, 191);</string>
           </widget>
          </item>
          <item>
-          <widget class="QListWidget" name="lstTitle"/>
+          <widget class="QTreeView" name="lstTitle"/>
          </item>
         </layout>
        </widget>
@@ -69,9 +67,7 @@ background-color: rgb(191, 191, 191);</string>
          <item>
           <widget class="QLabel" name="label">
            <property name="styleSheet">
-            <string notr="true">border: 3px solid gray;
-border-radius:40px;
-background-color: rgb(191, 191, 191);</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>Tags</string>
@@ -98,7 +94,7 @@ background-color: rgb(191, 191, 191);</string>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0">
          <property name="sizeConstraint">
           <enum>QLayout::SetDefaultConstraint</enum>
@@ -146,7 +142,7 @@ background-color: rgb(191, 191, 191);</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0">
          <item>
           <widget class="QLineEdit" name="edtTag">

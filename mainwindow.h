@@ -73,6 +73,8 @@ private slots:
 
     void on_lstTag_clicked(const QModelIndex &index);
 
+    void on_lstTitle_clicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
     void paintEvent(QPaintEvent *);
