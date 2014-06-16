@@ -347,6 +347,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     }
     ui->lstTitle->setModel(model);
+    ui->splitter->setStretchFactor(0,2);
+    ui->splitterEdit->setStretchFactor(0,3);
+    ui->splitterEdit->setStretchFactor(1,1);
 }
 
 MainWindow::~MainWindow()
